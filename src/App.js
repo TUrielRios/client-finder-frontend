@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import SearchForm from './components/SearchForm/SearchForm';
 import FilterForm from './components/FilterForm/FilterForm';
 import styles from './App.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGlobeAmericas, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 
 const App = () => {
   const [businesses, setBusinesses] = useState([]);
@@ -57,7 +59,7 @@ const App = () => {
     if (!phoneNumber) return null;
     
     const cleanPhoneNumber = phoneNumber.replace(/\D/g, '');
-    const message = encodeURIComponent('Hola, me gustaría obtener más información sobre sus servicios.');
+    const message = encodeURIComponent("Hola!");
     return `https://wa.me/${cleanPhoneNumber}?text=${message}`;
   };
 
@@ -71,49 +73,60 @@ const App = () => {
         <FilterForm onFilterChange={handleFilterChange} />
         {loading ? (
     <p className={styles.loadingMessage}>Buscando negocios...</p>  // Mensaje de carga
-  ):
-  (
-    <div className={styles.results}>
+          ):
+          (
+            <div className={styles.results}>
           {filteredBusinesses.length > 0 && (
             <ul className={styles.businessList}>
               {filteredBusinesses.map((business, index) => (
                 <li key={index} className={styles.businessItem}>
-                  <div className={styles.businessHeader}>
-                    <h3 className={styles.businessTitle}>{business.title}</h3>
-
-                  </div>
-                  <p className={styles.businessDescription}>{business.description}</p>
-                  <ul className={styles.businessFeatures}>
-                    <li>Website: {business.website}</li>
-                    <li>Categoría: {business.category}</li>
-                    <li>Dirección: {business.address}</li>
-                    <li>Número telefónico: {business.phone_num || 'Teléfono no disponible'}</li>
-                  </ul>
-                  <div className={styles.contactBusiness}> 
-                  <button className={styles.businessButton}>
-                  {business.website && (
-                  <a href={business.website} target="_blank" rel="noopener noreferrer" 
-                  className={styles.businessButton}>Visitar sitio web</a>)} 
-                  </button>
-                  <button className={styles.businessButtonW}>
-                  {business.phone_num && (
-                    <a 
-                      href={createWhatsAppLink(business.phone_num)} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className={`${styles.businessButton} ${styles.whatsappButton}`}
-                    >
-                      Contactar por WhatsApp
-                    </a>
-                  )}
-                  </button>
-                  </div>
-                  
-                </li>
-              ))}
-            </ul>
+                  <div className={styles.card}>
+                    <div className={styles.cardContent}>
+                      <h3 className={styles.businessTitle}>{business.title}</h3>
+                      <h3 className={styles.cardAddress}>
+                        <FontAwesomeIcon icon={faLocationDot} style={{color:'white', paddingRight: '5px'}} />{business.address}
+                      </h3>  
+                      <ul className={styles.cardFeatures}>
+                        <li> <span style={{backgroundColor:'#ccc', padding:'5px',fontSize:'13px',
+                           borderRadius:'10px', fontWeight:'800', textTransform:'uppercase'}}>Categoría: </span>{business.category}</li>
+                        <li> <span style={{backgroundColor:'#ccc', padding:'5px',fontSize:'13px',
+                           borderRadius:'10px', fontWeight:'800', textTransform:'uppercase'}}>Website: </span> {business.website}</li>
+                        <li><span style={{backgroundColor:'#ccc', padding:'2px',fontSize:'13px', marginBottom:'150px',
+                           borderRadius:'10px', fontWeight:'800', textTransform:'uppercase', marginTop:'10px'}}>Número telefónico:</span>  {business.phone_num || 'Teléfono no disponible'}</li>
+                      </ul>
+                      <div className={styles.cardActions}>
+          {business.website && (
+            <button className={styles.websiteButton}>
+              <a
+                href={business.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.businessLink}
+              >
+              <FontAwesomeIcon icon={faGlobeAmericas} />
+              </a>
+            </button>
+          )}
+          {business.phone_num && (
+            <button className={styles.businessButtonW}>
+              <a
+                href={createWhatsAppLink(business.phone_num)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${styles.whatsappButton}`}
+              >
+              </a>
+            </button>
           )}
         </div>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
+
   )}
         
       </main>
